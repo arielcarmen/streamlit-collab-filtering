@@ -1,5 +1,6 @@
 import streamlit as st 
 import numpy as np
+import math
 
 st.title("my app")
 
@@ -27,16 +28,27 @@ def similarity(movie1, movie2):
     mean_movie_2 = movie_mean(movie2)
 
     users_means = []
+    indexes = []
 
     for i in range(12):
         if (ratings_movie1[i] != 0 and ratings_movie2[i] != 0):
-            users_means.append((ratings_movie1[i]-ratings_movie1) * (ratings_movie2[i]-ratings_movie2))
-            
+            indexes.append(i)
+            users_means.append((ratings_movie1[i]-mean_movie_1) * (ratings_movie2[i]-mean_movie_2))
 
+    temp1 = 0
+    temp2 = 0
     
-    similarity = 1 
-    print(similarity)
-    return similarity
+    for i in indexes:
+        temp1 += (ratings_movie1[i] - mean_movie_1)
+        temp2 += (ratings_movie2[i] - mean_movie_2)
+        
+    std_movie1 = math.sqrt(temp1)
+    std_movie2 = math.sqrt(temp2)
+        
+    similarity_value = sum(users_means)/(std_movie1*std_movie2)
+
+    print(similarity_value)
+    return similarity_value
 
 
 def top_n_similarity(movie, n):
@@ -60,4 +72,4 @@ def top_n_similarity(movie, n):
 # predicted_rating = np.mean(user1_ratings)
 # print(f"La note prédite que l'utilisateur 1 aurait donnée au film 5 est : {predicted_rating:.2f}")
 
-similarity_mean(0,1)
+similarity(0,1)
