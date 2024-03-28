@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import math
 
 ratings = np.array([
@@ -70,6 +71,5 @@ def predict_rating(n, users_number, selected_movie, selected_user):
 
     return rates_by_means / sum(sims)
 
-predicted_rating = predict_rating(2, 12, 0, 4)
-
-print(f"La note prédite que l'utilisateur 1 aurait donnée au film 5 est : {predicted_rating:.2f}")
+def array_to_dataframe(arr):
+    return pd.DataFrame(arr)
