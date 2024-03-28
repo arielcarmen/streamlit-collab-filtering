@@ -1,8 +1,5 @@
-import streamlit as st 
 import numpy as np
 import math
-
-st.title("my app")
 
 ratings = np.array([
     [1, 0, 3, 0, 0, 5, 0, 0, 5, 0, 4, 0],
@@ -18,7 +15,7 @@ N = 2
 num_users = 10
 num_movies = 10
 
-selected_user = 0
+selected_user = 4
 selected_movie = 0
 
 def movie_mean(movie):
@@ -50,7 +47,7 @@ def similarity(movie1, movie2):
         
     similarity_value = sum(users_means)/(std_movie1*std_movie2)
 
-    return similarity_value
+    return round(similarity_value, 2)
 
 
 def top_n_similarity(movie, n):
@@ -66,10 +63,22 @@ def top_n_similarity(movie, n):
     top_n = similarities[:n]
     return top_n
 
-top_n_similarities = top_n_similarity(1, N)
+def predict_rating():
+    top_n_similarities = top_n_similarity(selected_movie, N)
+    rates_by_means = 0
 
-print(top_n_similarities)
+    sims= []
+    for item in top_n_similarities:
+        user_rating = ratings[item[0]][selected_user]
+        if user_rating != 0:
+            sim = similarity(ratings[selected_movie], ratings[item[0]])
+            rates_by_means += sim * user_rating
+            sims.append(sim)
+    print(means)
 
-predicted_rating = 0
+    return rates_by_means / sum(means)
+
+
+predicted_rating = predict_rating()
 
 print(f"La note prédite que l'utilisateur 1 aurait donnée au film 5 est : {predicted_rating:.2f}")
