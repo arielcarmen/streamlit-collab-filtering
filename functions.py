@@ -11,12 +11,6 @@ ratings = np.array([
 ])
 
 
-num_users = 10
-num_movies = 10
-
-selected_user = 4
-selected_movie = 0
-
 def movie_mean(movie):
     return np.sum(ratings[movie])/np.count_nonzero(ratings[movie])
 
@@ -62,7 +56,7 @@ def top_n_similarity(movie, n, users_number):
     top_n = similarities[:n]
     return top_n
 
-def predict_rating(n, users_number):
+def predict_rating(n, users_number, selected_movie, selected_user):
     top_n_similarities = top_n_similarity(selected_movie, n, users_number)
     rates_by_means = 0
 
@@ -73,12 +67,9 @@ def predict_rating(n, users_number):
             sim = similarity(selected_movie, item[0], users_number)
             rates_by_means += sim * user_rating
             sims.append(sim)
-    
-    print(rates_by_means)
-    print(sum(sims))
 
     return rates_by_means / sum(sims)
 
-predicted_rating = predict_rating(1, 3)
+predicted_rating = predict_rating(2, 12, 0, 4)
 
 print(f"La note prédite que l'utilisateur 1 aurait donnée au film 5 est : {predicted_rating:.2f}")
