@@ -15,12 +15,17 @@ ratings = np.array([
 
 N = 2
 
+num_users = 10
+num_movies = 10
+
+selected_user = 0
+selected_movie = 0
+
 def movie_mean(movie):
     return np.sum(ratings[movie])/np.count_nonzero(ratings[movie])
 
 
 def similarity(movie1, movie2):
-    
     ratings_movie1 = ratings[movie1]
     ratings_movie2 = ratings[movie2]
 
@@ -29,47 +34,42 @@ def similarity(movie1, movie2):
 
     users_means = []
     indexes = []
+    temp1 = temp2 = 0
 
     for i in range(12):
         if (ratings_movie1[i] != 0 and ratings_movie2[i] != 0):
             indexes.append(i)
             users_means.append((ratings_movie1[i]-mean_movie_1) * (ratings_movie2[i]-mean_movie_2))
-
-    temp1 = 0
-    temp2 = 0
     
     for i in indexes:
-        temp1 += (ratings_movie1[i] - mean_movie_1)
-        temp2 += (ratings_movie2[i] - mean_movie_2)
+        temp1 += (ratings_movie1[i] - mean_movie_1) ** 2
+        temp2 += (ratings_movie2[i] - mean_movie_2) ** 2
         
-    std_movie1 = math.sqrt(temp1)
-    std_movie2 = math.sqrt(temp2)
+    std_movie1 = np.sqrt(temp1)
+    std_movie2 = np.sqrt(temp2)
         
     similarity_value = sum(users_means)/(std_movie1*std_movie2)
 
-    print(similarity_value)
     return similarity_value
 
 
 def top_n_similarity(movie, n):
-    # similarites 
-    similarities = [(i, similarity_mean(movie, i)) for i in range(len(ratings)) if i != movie]
-    # Trier les similarités par ordre décroissant
+    similarities = []
+    
+    for i in range(len(ratings)):
+        if i != movie:
+            sim = similarity(movie, i)
+            similarities.append((i, sim))
+   
     similarities.sort(key=lambda x: x[1], reverse=True)
-    # Sélectionner les top N similarités
+
     top_n = similarities[:n]
     return top_n
 
-# top_n_similarities = top_n_similarity(4, N)
+top_n_similarities = top_n_similarity(1, N)
 
+print(top_n_similarities)
 
-# film5_ratings = ratings[1]
+predicted_rating = 0
 
-
-# user1_ratings = [film5_ratings[movie] for movie, _ in top_n_similarities]
-
-
-# predicted_rating = np.mean(user1_ratings)
-# print(f"La note prédite que l'utilisateur 1 aurait donnée au film 5 est : {predicted_rating:.2f}")
-
-similarity(0,1)
+print(f"La note prédite que l'utilisateur 1 aurait donnée au film 5 est : {predicted_rating:.2f}")
