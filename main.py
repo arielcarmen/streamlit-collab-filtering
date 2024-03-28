@@ -32,9 +32,9 @@ def similarity(movie1, movie2):
     users_means = []
     indexes = []
     temp1 = temp2 = 0
-
+    
     for i in range(12):
-        if (ratings_movie1[i] != 0 and ratings_movie2[i] != 0):
+        if (ratings_movie1[i] != 0) and (ratings_movie2[i] != 0):
             indexes.append(i)
             users_means.append((ratings_movie1[i]-mean_movie_1) * (ratings_movie2[i]-mean_movie_2))
     
