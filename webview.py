@@ -36,7 +36,7 @@ if st.button(label= "Predire"):
         st.error(f"Le film {movie_to_predict} n'existe pas !")
     elif user_to_predict < 1 or user_to_predict > scores_grid.count(axis=1).size :
         st.error(f"L'utilisateur {user_to_predict} n'existe pas !")
-    elif top_number > scores_grid.count(axis=1).size or top_number < scores_grid.count(axis=1).size:
+    elif top_number > scores_grid.count(axis=1).size or top_number < 1:
         st.error(f"Le top {top_number} n'est pas en accord avec le nombre de films !")
     else:
         existing_score = scores_grid.iloc[movie_to_predict -1, user_to_predict -1]
