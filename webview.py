@@ -21,11 +21,14 @@ column1, column2 = st.columns(2)
 
 # movies_number = st.number_input('Nombre de films:', 1)
 # users_number = st.number_input('Nombre d\'utilisateurs:', 1)
-scores_grid = pd.read_csv("movies.csv")
+# scores_grid = pd.read_csv("movies.csv")
+scores_grid = pd.read_csv("class_table.csv")
 scores_grid = scores_grid.apply(pd.to_numeric, axis= 1)
 table = None
 
-table = st.write(scores_grid)
+container = st.empty()
+container.dataframe(scores_grid)
+#table = st.write(scores_grid)
 top_number = st.number_input('N:', 2)
 user_to_predict = st.number_input('Utilisateur dont on veut prédire la note:', 1)
 movie_to_predict = st.number_input('Film dont on veut prédire la note:', 1)
@@ -40,7 +43,7 @@ if st.button(label= "Predire"):
         st.error(f"Le top {top_number} n'est pas en accord avec le nombre de films !")
     else:
         existing_score = scores_grid.iloc[movie_to_predict -1, user_to_predict -1]
-        if existing_score:
+        if not pd.isna(existing_score):
             st.write(f"L'utilisateur {user_to_predict} a déja accordé la note de {existing_score} au film {movie_to_predict}")
         else:
             scores_array = scores_grid.values
@@ -57,9 +60,11 @@ if st.button(label= "Predire"):
             if predicted_rating == 0 or 0 < predicted_rating > 5 :
                 st.write("Impossible de predire cette note")
             else: 
+                scores_grid.iloc[movie_to_predict -1, user_to_predict -1] = predicted_rating
                 st.write(f"L'utilisateur {user_to_predict} pourrait donner au film {movie_to_predict}, un score de: {round(predicted_rating, 2)}")
+                container.dataframe(scores_grid)
 
-def generate_csv():
+def generate_random_csv(movies_number, users_number):
     movies_labels = [f"Film {i}" for i in range (1, movies_number + 1)]
     users_labels = [f"Utilisateur {i}" for i in range (1, users_number + 1)]
     scores_grid = pd.DataFrame(np.random.choice([0, 1, 2, 3, 4, 5], size=(movies_number, users_number), p=[0.5, 0.1, 0.1, 0.1, 0.1, 0.1]))

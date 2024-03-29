@@ -39,7 +39,7 @@ def similarity(ratings, movie1, movie2, users_number):
     std_movie1 = np.sqrt(temp1)
     std_movie2 = np.sqrt(temp2)
         
-    if (std_movie1*std_movie2) not in [0, np.NaN]:
+    if ((std_movie1*std_movie2) not in [0, np.NaN]) and ((std_movie1*std_movie2) not in [0, np.NaN]):
         similarity_value = sum(users_means)/(std_movie1*std_movie2)
     else:
         similarity_value = 0
