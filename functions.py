@@ -79,3 +79,17 @@ def generate_random_table(movies_number, users_number):
     
     return scores_grid
 
+def highlight_changes(df_before, df_after, color='lightgreen'):
+    
+    df_highlighted = df_after.copy()
+
+    # Identifier les cellules qui passent de NaN à une valeur numérique dans le second DataFrame
+    mask = (~df_before.isna()) & (df_after.notna())
+
+    # Mettre en couleur les cellules modifiées dans la copie du DataFrame
+    for col in df_before.columns:
+        for idx in df_before.index:
+            if mask.loc[idx, col]:
+                df_highlighted.loc[idx, col] = f'background-color: {color}'
+
+    return df_highlighted
