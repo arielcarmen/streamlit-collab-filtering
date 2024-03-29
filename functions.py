@@ -1,16 +1,7 @@
 import numpy as np
 import pandas as pd
 import math
-
-ratingsu = np.array([
-    [1, 0, 3, 0, 0, 5, 0, 0, 5, 0, 4, 0],
-    [0, 0, 5, 4, 0, 0, 4, 0, 0, 2, 1, 3],
-    [2, 4, 0, 1, 2, 0, 3, 0, 4, 3, 5, 0],
-    [0, 2, 4, 0, 5, 0, 0, 4, 0, 0, 2, 0],
-    [0, 0, 4, 3, 4, 2, 4, 0, 0, 0, 2, 5],
-    [1, 0, 3, 0, 3, 0, 0, 2, 0, 0, 4, 0],
-])
-
+import streamlit as st
 
 def movie_mean(ratings, movie):
     return np.sum(ratings[movie])/np.count_nonzero(ratings[movie])
@@ -77,7 +68,14 @@ def predict_rating(ratings, n, users_number, selected_movie, selected_user):
     else:
         return 0
 
-def array_to_dataframe(arr):
-    return pd.DataFrame(arr)
+@st.cache_resource
+def generate_random_table(movies_number, users_number):
+    movies_labels = [f"Film {i}" for i in range (1, movies_number + 1)]
+    users_labels = [f"Utilisateur {i}" for i in range (1, users_number + 1)]
+    scores_grid = pd.DataFrame(np.random.choice([0, 1, 2, 3, 4, 5], size=(movies_number, users_number), p=[0.5, 0.1, 0.1, 0.1, 0.1, 0.1]))
+    scores_grid = scores_grid.replace(0, np.nan)
+    scores_grid = scores_grid.set_index(pd.Index(movies_labels))
+    scores_grid = scores_grid.rename(columns = {i: users_labels[i] for i in range(users_number)})
+    
+    return scores_grid
 
-# predict_rating(2, 6, 1, 1)
