@@ -9,18 +9,23 @@ st.header(':blue[Prediction de note]')
 container = st.empty()
 scores_grid = pd.DataFrame()
 
-# column1, column2 = st.columns(2)
-# with column1:
-#     movies_number = st.number_input('Nombre de films:', 5)
-# with column2:
-#     users_number = st.number_input('Nombre d\'utilisateurs:', 5)
+# if 'table_generated' not in st.session_state and 'dataframe' not in st.session_state:
+#     column1, column2 = st.columns(2)
+#     with column1:
+#         movies_number = st.number_input('Nombre de films:', 5)
+#     with column2:
+#         users_number = st.number_input('Nombre d\'utilisateurs:', 5)
 
-# if st.button("Générer le tableau"):
-#     scores_grid = generate_random_table(users_number= users_number, movies_number= movies_number)
-#     container.dataframe(scores_grid)
+#     if st.button("Générer le tableau"):
+#         scores_grid = generate_random_table(users_number= users_number, movies_number= movies_number)
+#         st.session_state.dataframe = scores_grid
+#         container.dataframe(scores_grid)
+#         st.session_state.table_generated = True
+#         st.session_state.can_predict = True
 
 
-# Pour utilisation avec csv
+###### Pour utilisation avec csv
+
 initial_dataframe = pd.read_csv("class_table.csv")
 
 if 'dataframe' not in st.session_state:
@@ -32,7 +37,7 @@ scores_grid = scores_grid.apply(pd.to_numeric, axis= 1)
 container.dataframe(scores_grid)
 st.session_state.can_predict = True
 
-if 'can_predict' in st.session_state:
+if 'can_predict' in st.session_state and st.session_state.can_predict == True:
     column3, column4, column5 = st.columns(3)
     with column3:
         top_number = st.number_input('N:', 2)
