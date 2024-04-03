@@ -68,12 +68,11 @@ def predict_rating(ratings, n, users_number, selected_movie, selected_user):
     else:
         return 0
 
-@st.cache_resource
-def generate_random_table(movies_number, users_number):
+
+def generate_table(scores_grid, movies_number, users_number):
     movies_labels = [f"Film {i}" for i in range (1, movies_number + 1)]
     users_labels = [f"Utilisateur {i}" for i in range (1, users_number + 1)]
-    scores_grid = pd.DataFrame(np.random.choice([0, 1, 2, 3, 4, 5], size=(movies_number, users_number), p=[0.5, 0.1, 0.1, 0.1, 0.1, 0.1]))
-    scores_grid = scores_grid.replace(0, np.nan)
+    # scores_grid = scores_grid.replace(0, np.nan)
     scores_grid = scores_grid.set_index(pd.Index(movies_labels))
     scores_grid = scores_grid.rename(columns = {i: users_labels[i] for i in range(users_number)})
     
