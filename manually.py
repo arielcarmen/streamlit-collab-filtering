@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-st.header(':blue[Prediction de note]')
+st.header(':blue[Prediction de notes à partir d\'un csv]')
 
 dataframe_container = st.empty()
 
@@ -42,7 +42,8 @@ if 'n' not in st.session_state:
     st.session_state['n'] = 2
 
 scores_grid = st.session_state['dataframe']
-
+ 
+# Definir la taille du dataframe
 def validate_dataframe_size():
     movies_labels = [f"Film {i}" for i in range (1, movies_number + 1)]
     users_labels = [f"Utilisateur {i}" for i in range (1, users_number + 1)]
@@ -55,6 +56,7 @@ def validate_dataframe_size():
     st.session_state['show_dataframe_fields'] = not st.session_state['show_dataframe_fields']
     st.session_state['show_scores_fields'] = not st.session_state['show_scores_fields']
 
+# Calculer les notes maquantes
 def validate_scores_datas():
     st.session_state['n'] = N
     st.session_state['choose_n'] = not st.session_state['choose_n']
@@ -71,6 +73,7 @@ def validate_scores_datas():
                 st.session_state['dataframe'] = scores_grid
     dataframe_container.dataframe(scores_grid)
 
+# Definir la valeur de N
 def define_n():
     st.session_state['show_scores_fields'] = not st.session_state['show_scores_fields']
     st.session_state['choose_n'] = not st.session_state['choose_n']
@@ -121,7 +124,7 @@ def check_movie_score(user, movie):
             elif predicted_rating >= 3:
                 predicted_result.write(f"L'utilisateur {user +1} pourrait apprécier pas le film {movie +1}")
         else:
-            predicted_result.write("Cette valeur a n'a pas été calculée")
+            predicted_result.write(f"Cette valeur a n'a pas été calculée, la note existante est de {actual_dataframe.iloc[movie, user]}")
 
 
 # CODE......
@@ -158,65 +161,3 @@ if st.session_state['show_user_choice'] == True:
     movie_to_predict = user_choice.number_input('Films:', 1, max_value= len(grid))
 
     user_choice.button("Evaluer", on_click= check_movie_score(user= user_to_predict-1, movie= movie_to_predict-1))
-
-
-###### Pour utilisation avec csv
-
-# initial_dataframe = pd.read_csv("class_table.csv")
-
-# if 'dataframe' not in st.session_state:
-#     main_dataframe = pd.read_csv("class_table.csv")
-#     st.session_state.dataframe = main_dataframe
-
-# scores_grid = st.session_state.dataframe
-# scores_grid = scores_grid.apply(pd.to_numeric, axis= 1)
-# container.dataframe(scores_grid)
-# st.session_state.can_predict = True
-
-# if 'can_predict' in st.session_state and st.session_state.can_predict == True:
-#     column3, column4, column5 = st.columns(3)
-#     with column3:
-#         top_number = st.number_input('N:', 2)
-#     with column4:
-#         user_to_predict = st.number_input('Utilisateur:', 1)
-#     with column5:
-#         movie_to_predict = st.number_input('Film à noter:', 1)
-
-#     if st.button(label= "Predire"):
-
-#         if  movie_to_predict < 1 or movie_to_predict > scores_grid.count(axis=1).size:
-#             st.error(f"Le film {movie_to_predict} n'existe pas !")
-#         elif user_to_predict < 1 or user_to_predict > scores_grid.count(axis=0).size :
-#             st.error(f"L'utilisateur {user_to_predict} n'existe pas !")
-#         elif top_number > scores_grid.count(axis=1).size or top_number < 1:
-#             st.error(f"Le top {top_number} n'est pas en accord avec le nombre de films !")
-#         else:
-#             existing_score = scores_grid.iloc[movie_to_predict -1, user_to_predict -1]
-#             if not pd.isna(existing_score):
-#                 st.write(f"L'utilisateur {user_to_predict} a déja accordé la note de {existing_score} au film {movie_to_predict}")
-#             else:
-#                 scores_array = scores_grid.values
-#                 scores_array = np.nan_to_num(scores_array)
-#                 scores_array = scores_array.astype(int)
-#                 predicted_rating = predict_rating(
-#                     ratings= scores_array,
-#                     n= top_number,
-#                     users_number= scores_grid.count(axis=1).size,
-#                     selected_movie= movie_to_predict - 1,
-#                     selected_user= user_to_predict - 1
-#                 )
-#                 predicted_rating = round(predicted_rating)
-
-#                 if predicted_rating == 0 or 0 < predicted_rating > 5 :
-#                     st.write("Impossible de predire cette note à partir des données")
-#                 else: 
-#                     scores_grid.iloc[movie_to_predict -1, user_to_predict -1] = predicted_rating
-#                     # st.session_state.dataframe = highlight_changes(df_before= initial_dataframe, df_after=scores_grid)
-#                     st.session_state.dataframe = scores_grid
-#                     st.write(f"L'utilisateur {user_to_predict} pourrait donner au film {movie_to_predict}, un score de: {round(predicted_rating, 2)}")
-#                     container.dataframe(scores_grid)
-
-
-
-
-        
