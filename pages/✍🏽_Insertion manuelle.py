@@ -4,6 +4,7 @@ import pandas as pd
 
 st.header(':blue[Prediction de notes inserées manuellement]')
 
+# Création des différents containers
 dataframe_container = st.empty()
 
 old_dataframe = st.empty()
@@ -18,12 +19,13 @@ user_choice = st.container()
 
 predicted_result = st.container()
 
-if 'dataframe' not in st.session_state:
-    st.session_state['dataframe'] = pd.DataFrame()
-
 users_number = 4
 movies_number = 4
 N = 2
+
+# Définir les variables de session
+if 'dataframe' not in st.session_state:
+    st.session_state['dataframe'] = pd.DataFrame()
 
 if 'show_dataframe_fields' not in st.session_state:
     st.session_state['show_dataframe_fields'] = True
@@ -52,8 +54,6 @@ def validate_dataframe_size():
 
     st.session_state['show_dataframe_fields'] = not st.session_state['show_dataframe_fields']
     st.session_state['show_scores_fields'] = not st.session_state['show_scores_fields']
-    
-    
 
 # Calculer les notes maquantes
 def validate_scores_datas():
@@ -109,7 +109,7 @@ def predict_user_rating(df, movie_index, user_index, top_n):
     
     return predicted_rating
 
-
+# Rechercher le score dans le tableau
 def check_movie_score(user, movie):
     actual_dataframe = st.session_state['dataframe']
     original_dataframe = st.session_state['original_dataframe']
@@ -129,7 +129,7 @@ def check_movie_score(user, movie):
             predicted_result.write(f"Cette valeur a n'a pas été calculée, la note existante est de {actual_dataframe.iloc[movie, user]}")
 
 
-# CODE......
+# Déroulement du programme
 if st.session_state['show_dataframe_fields']:
     column1, column2 = dataframe_fields.columns(2)
     with column1:

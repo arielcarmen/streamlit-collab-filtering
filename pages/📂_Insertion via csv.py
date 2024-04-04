@@ -4,6 +4,7 @@ import pandas as pd
 
 st.header(':blue[Prediction de notes à partir d\'un csv]')
 
+# Création des différents containers
 dataframe_container_ = st.empty()
 
 csv_loader = st.container()
@@ -94,6 +95,7 @@ def predict_user_rating(df, movie_index, user_index, top_n):
     
     return predicted_rating
 
+# Rechercher le score dans le tableau
 def check_movie_score(user, movie):
     actual_dataframe = st.session_state['dataframe_']
     original_dataframe = st.session_state['original_dataframe_']
@@ -112,7 +114,7 @@ def check_movie_score(user, movie):
         else:
             predicted_result_.write(f"Cette valeur a n'a pas été calculée, la note existante est de {actual_dataframe.iloc[movie, user]}")
 
-# CODE......
+# Déroulement du programme
 if st.session_state['show_csv_field_']:
     uploaded_file = csv_loader.file_uploader("Charger un csv:", type=["csv"])
     if uploaded_file is not None:
