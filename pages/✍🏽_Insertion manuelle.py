@@ -57,6 +57,11 @@ def validate_dataframe_size():
 
 # Calculer les notes maquantes
 def validate_scores_datas():
+
+    users_labels = {scores_grid.columns[i]: f'Utilisateur {i+1}' for i in range(st.session_state['movies_number'])}
+    movies_labels = {scores_grid.index[i]: f'Film {i+1}' for i in range(st.session_state['users_number'])}
+    scores_grid.rename(columns=users_labels, index=movies_labels, inplace=True)
+
     st.session_state['n'] = N
     st.session_state['choose_n'] = not st.session_state['choose_n']
     st.session_state['show_user_choice'] = not st.session_state['show_user_choice']
@@ -122,9 +127,9 @@ def check_movie_score(user, movie):
             if np.isnan(predicted_rating):
                 predicted_result.write("Cette valeur n'a pas pu être prédite")
             elif predicted_rating < 3:
-                predicted_result.write(f"L'utilisateur {user +1} n'aimerait pas le film {movie +1}")
+                predicted_result.write(f"L'utilisateur {user +1} n'aimerait pas le film {movie +1}, avec une note possible de {actual_dataframe.iloc[movie, user]}")
             elif predicted_rating >= 3:
-                predicted_result.write(f"L'utilisateur {user +1} pourrait apprécier pas le film {movie +1}")
+                predicted_result.write(f"L'utilisateur {user +1} pourrait apprécier le film {movie +1}, avec une note possible de {actual_dataframe.iloc[movie, user]}")
         else:
             predicted_result.write(f"Cette valeur a n'a pas été calculée, la note existante est de {actual_dataframe.iloc[movie, user]}")
 
@@ -149,9 +154,6 @@ if st.session_state['show_scores_fields'] == True:
 
     dataframe_container.dataframe(scores_grid)
     
-    users_labels = {scores_grid.columns[i]: f'Utilisateur {i+1}' for i in range(st.session_state['movies_number'])}
-    movies_labels = {scores_grid.index[i]: f'Film {i+1}' for i in range(st.session_state['users_number'])}
-    scores_grid.rename(columns=users_labels, index=movies_labels, inplace=True)
     st.session_state['dataframe'] = scores_grid
     st.session_state['original_dataframe'] = scores_grid.copy()
 

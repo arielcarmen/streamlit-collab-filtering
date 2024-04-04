@@ -110,7 +110,7 @@ def check_movie_score(user, movie):
             elif predicted_rating < 3:
                 predicted_result_.write(f"Cet utilisateur {user +1} n'aimerait pas le film {movie +1}, avec une note possible de {actual_dataframe.iloc[movie, user]}")
             elif predicted_rating >= 3:
-                predicted_result_.write(f"L'utilisateur {user +1} pourrait apprécier pas le film {movie +1}, avec une note possible de {actual_dataframe.iloc[movie, user]}")
+                predicted_result_.write(f"L'utilisateur {user +1} pourrait apprécier le film {movie +1}, avec une note possible de {actual_dataframe.iloc[movie, user]}")
         else:
             predicted_result_.write(f"Cette valeur a n'a pas été calculée, la note existante est de {actual_dataframe.iloc[movie, user]}")
 
@@ -121,8 +121,8 @@ if st.session_state['show_csv_field_']:
         scores_grid = pd.read_csv(uploaded_file)
         st.session_state['dataframe_'] = scores_grid
         st.session_state['original_dataframe_'] = scores_grid.copy()
-
-    csv_loader.button("Valider", on_click= define_n)
+        csv_loader.button("Valider", on_click= define_n)
+    
 
 if st.session_state['choose_n_'] == True:
     dataframe_container_.dataframe(scores_grid)
