@@ -145,15 +145,15 @@ if st.session_state['show_scores_fields'] == True:
         for j in range(st.session_state['users_number']):
             scores_grid.loc[i,j] = scores_field.number_input(f'Note du Film {i+1} par l\'utilisateur {j+1}: ', 0, max_value=5)
             st.session_state['dataframe'] = scores_grid
-            st.session_state['original_dataframe'] = scores_grid.copy()
             dataframe_container.dataframe(scores_grid)
-            
+
     dataframe_container.dataframe(scores_grid)
     
     users_labels = {scores_grid.columns[i]: f'Utilisateur {i+1}' for i in range(st.session_state['movies_number'])}
     movies_labels = {scores_grid.index[i]: f'Film {i+1}' for i in range(st.session_state['users_number'])}
     scores_grid.rename(columns=users_labels, index=movies_labels, inplace=True)
     st.session_state['dataframe'] = scores_grid
+    st.session_state['original_dataframe'] = scores_grid.copy()
 
     scores_field.button("Valider les notes", on_click= define_n)
         
