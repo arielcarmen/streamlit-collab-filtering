@@ -58,8 +58,8 @@ def validate_dataframe_size():
 # Calculer les notes maquantes
 def validate_scores_datas():
 
-    users_labels = {scores_grid.columns[i]: f'Utilisateur {i+1}' for i in range(st.session_state['movies_number'])}
-    movies_labels = {scores_grid.index[i]: f'Film {i+1}' for i in range(st.session_state['users_number'])}
+    users_labels = {scores_grid.columns[i]: f'Utilisateur {i+1}' for i in range(st.session_state['users_number'])}
+    movies_labels = {scores_grid.index[i]: f'Film {i+1}' for i in range(st.session_state['movies_number'])}
     scores_grid.rename(columns=users_labels, index=movies_labels, inplace=True)
 
     st.session_state['n'] = N

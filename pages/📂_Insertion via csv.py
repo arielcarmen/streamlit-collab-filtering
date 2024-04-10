@@ -38,7 +38,7 @@ if 'show_result_' not in st.session_state:
 if 'n_' not in st.session_state:
     st.session_state['n_'] = 2
 
-scores_grid = st.session_state['dataframe_']
+scores_grid_ = st.session_state['dataframe_']
 
 # Calculer les notes maquantes
 def validate_scores_datas():
@@ -52,16 +52,16 @@ def validate_scores_datas():
         for j in range(st.session_state['users_number_']):
             if np.isnan(grid.iloc[i,j]):
                 predicted_value = predict_user_rating(movie_index=i, user_index= j, top_n= st.session_state['n_'], df= grid)
-                scores_grid.iloc[i,j] = round(predicted_value)
-                st.session_state['dataframe_'] = scores_grid
-    dataframe_container_.dataframe(scores_grid)
+                scores_grid_.iloc[i,j] = round(predicted_value)
+                st.session_state['dataframe_'] = scores_grid_
+    dataframe_container_.dataframe(scores_grid_)
 
 # Definir la valeur de N
 def define_n():
     st.session_state['show_csv_field_'] = not st.session_state['show_csv_field_']
     st.session_state['choose_n_'] = not st.session_state['choose_n_']
-    movies_number_ = len(scores_grid)
-    users_number_ = len(scores_grid.columns)
+    movies_number_ = len(scores_grid_)
+    users_number_ = len(scores_grid_.columns)
 
     st.session_state.users_number_ = users_number_
     st.session_state.movies_number_ = movies_number_
@@ -118,14 +118,14 @@ def check_movie_score(user, movie):
 if st.session_state['show_csv_field_']:
     uploaded_file = csv_loader.file_uploader("Charger un csv:", type=["csv"])
     if uploaded_file is not None:
-        scores_grid = pd.read_csv(uploaded_file)
-        st.session_state['dataframe_'] = scores_grid
-        st.session_state['original_dataframe_'] = scores_grid.copy()
+        scores_grid_ = pd.read_csv(uploaded_file)
+        st.session_state['dataframe_'] = scores_grid_
+        st.session_state['original_dataframe_'] = scores_grid_.copy()
         csv_loader.button("Valider", on_click= define_n)
     
 
 if st.session_state['choose_n_'] == True:
-    dataframe_container_.dataframe(scores_grid)
+    dataframe_container_.dataframe(scores_grid_)
     N = n_choice_.number_input('Valeur du top n:', 2)
     st.session_state['n_'] = N
     n_choice_.button("Valider N", on_click= validate_scores_datas)
