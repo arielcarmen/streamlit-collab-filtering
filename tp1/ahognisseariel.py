@@ -6,12 +6,11 @@ import pandas as pd
 st.sidebar.write("Ariel AHOGNISSE")
 st.sidebar.write("Master 1 - GL")
 
-# FONCTIONS
 
 def page_home():
-    st.title("TP2 : Clustering K-means")
+    st.title("TP1 : Recommendation system: Collaborative Filtering (itemitem top n)")
     st.write("Cet exercice comporte les deux options d'insertion de données, la première manuelle et l'autre permet l'importation des données depuis un fichier csv.")
-    # st.write("Le fichier 'class_table.csv' contient les données du tableau étudié en classe pendant le cours sur des systèmes de recommandation")
+    st.write("Le fichier 'class_table.csv' contient les données du tableau étudié en classe pendant le cours sur des systèmes de recommandation")
     st.write("*Seuls les packages streamlit, numpy et pandas ont été utilisés")
 
 ## Insertion manuelle
@@ -332,7 +331,8 @@ pages = {
     "Insertion par csv": page_csv
 }
 
-page = st.sidebar.selectbox("Choisissez une page:", list(pages.keys()))
+for page_name in pages.keys():
+    if st.sidebar.button(page_name):
+        st.session_state.current_page = page_name
 
-
-pages[page]()
+pages[st.session_state.current_page]()
