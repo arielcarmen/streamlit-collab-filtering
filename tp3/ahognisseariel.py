@@ -45,14 +45,9 @@ def define_k():
     scatter_colors = [f'#{random.randint(0, 0xFFFFFF):06x}' for _ in range(st.session_state['dataset_size_'])]
     st.session_state['scatter_colors_'] = scatter_colors
 
-    value_max = list_[0]
-    index_max = 0
-    for i in range(1, len(list_)):
-        if list_[i] > value_max:
-            value_max = list_[i]
-            index_max = i
     
-    return index_max
+    
+    return 0
 
 # Déroulement du programme
 if st.session_state['show_csv_field_']:
