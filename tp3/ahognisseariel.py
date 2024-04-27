@@ -1,8 +1,7 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from collections import defaultdict
+import time
 
 
 # FONCTIONS
@@ -15,6 +14,8 @@ dataframe_container_ = st.empty()
 csv_loader = st.container()
 
 support_choice_ = st.container()
+
+results_ = st.container()
 
 if 'dataframe_' not in st.session_state:
     st.session_state['dataframe_'] = pd.DataFrame()
@@ -55,7 +56,7 @@ def generate_itemset(transactions):
     itemsets = set()
     for transaction in transactions:
         for item in transaction:
-            itemsets.add(item)
+            itemsets.add(frozenset([item]))
     return itemsets
 
 # Fonction pour calculer le support des itemsets
@@ -80,13 +81,18 @@ if st.session_state['show_csv_field_']:
 if st.session_state['choose_support_'] == True:
     dataframe_container_.dataframe(datas_)
     # b) Choisir support
-    support = support_choice_.number_input('Valeur du support:', 2, max_value= 10)
+    support = support_choice_.number_input('Valeur du support:', 0, max_value= 10)
     st.session_state['support_'] = support
 
     if  support_choice_.button("Lancer"):
+        start_time = time.time()
+        # frequent_itemsets = apriori(transactions, min_support)
+        end_time = time.time()
+
         transactions = generate_transactions(datas_)
         itemsets = generate_itemset(transactions)
-        print(itemsets)
+        calculated_supports = calculate_support(transactions, itemsets, support)
+        
         
 
         
