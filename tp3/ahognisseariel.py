@@ -91,15 +91,12 @@ def generate_frequent_items(lst, k):
     supports_dict = {}
     for i, combination in enumerate(all_combinations):
         combination_support = calculate_support(combination)
-        if combination_support >= k:
+        if combination_support >= k and not set(['']).issubset(combination):
             combinations_dict[f"Combinaison_{i+1}"] = combination
             supports_dict[f"Combinaison_{i+1}"] = combination_support
     return combinations_dict, supports_dict
 
 def common_elements(main_list, target_list):
-    if '' in main_list or '' in target_list:
-        return True
-    
     if all(elem in main_list for elem in target_list):
         return True
     else:
@@ -110,22 +107,20 @@ def common_elements(main_list, target_list):
 
 def generate_association_rules(items_dic, supports_dic):
     association_rules_dict = {}
-    for key in items_dic:
-        if not items_dic[key] == ['']:
-            dic_copy = items_dic.copy()
-            dic_copy.pop(key)
-            subitems = []
-            for other_key in dic_copy:
-                if set(items_dic[other_key]).issubset(items_dic[key]):
-                    subitems.append(other_key)
-            
-            for subitem in subitems:
-                if not items_dic[subitem] == ['']:
-                    _subitems = subitems.copy()
-                    _subitems.remove(subitem)
-                    for item in _subitems:
-                        if not set(items_dic[item]).issubset(items_dic[subitem]) and not common_elements(items_dic[subitem],items_dic[item]):
-                            association_rules_dict[f"{items_dic[subitem]} -> {items_dic[item]}"] = supports_dic[key]/supports_dic[subitem]
+    for key in items_dic:   
+        dic_copy = items_dic.copy()
+        dic_copy.pop(key)
+        subitems = []
+        for other_key in dic_copy:
+            if set(items_dic[other_key]).issubset(items_dic[key]):
+                subitems.append(other_key)
+        
+        for subitem in subitems:       
+            _subitems = subitems.copy()
+            _subitems.remove(subitem)
+            for item in _subitems:
+                if not set(items_dic[item]).issubset(items_dic[subitem]) and not common_elements(items_dic[subitem],items_dic[item]):
+                    association_rules_dict[f"{items_dic[subitem]} -> {items_dic[item]}"] = supports_dic[key]/supports_dic[subitem]
 
     top_10_list = sorted(association_rules_dict.items(), key=lambda item: item[1], reverse=True)
 
