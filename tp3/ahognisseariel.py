@@ -32,6 +32,9 @@ if 'choose_support_' not in st.session_state:
 if 'support_' not in st.session_state:
     st.session_state['support_'] = 2
 
+if 'max_support_' not in st.session_state:
+    st.session_state['max_support_'] = 2
+
 if 'itemset_' not in st.session_state:
     st.session_state['itemset_'] = {}
 
@@ -39,6 +42,7 @@ if 'transactions_' not in st.session_state:
     st.session_state['transactions_'] = {}
 
 support = st.session_state['support_']
+max_support = st.session_state['max_support_']
 datas_ = st.session_state['dataframe_']
 itemset_ = st.session_state['itemset_']
 transactions_ = st.session_state['transactions_']
@@ -92,21 +96,36 @@ def generate_frequent_items(lst, k):
             supports_dict[f"Combinaison_{i+1}"] = combination_support
     return combinations_dict, supports_dict
 
+def common_elements(main_list, target_list):
+    if '' in main_list or '' in target_list:
+        return True
+    
+    if all(elem in main_list for elem in target_list):
+        return True
+    else:
+        for element in target_list:
+            if element in main_list:
+                return True
+    return False
+
 def generate_association_rules(items_dic, supports_dic):
     association_rules_dict = {}
     for key in items_dic:
-        dic_copy = items_dic.copy()
-        dic_copy.pop(key)
-        subitems = []
-        for other_key in dic_copy:
-            if set(items_dic[other_key]).issubset(items_dic[key]):
-                subitems.append(other_key)
-        
-        for subitem in subitems:
-            _subitems = subitems.copy()
-            _subitems.remove(subitem)
-            for item in _subitems:
-                association_rules_dict[f"{items_dic[subitem]} -> {items_dic[item]}"] = supports_dic[key]/supports_dic[subitem]
+        if not items_dic[key] == ['']:
+            dic_copy = items_dic.copy()
+            dic_copy.pop(key)
+            subitems = []
+            for other_key in dic_copy:
+                if set(items_dic[other_key]).issubset(items_dic[key]):
+                    subitems.append(other_key)
+            
+            for subitem in subitems:
+                if not items_dic[subitem] == ['']:
+                    _subitems = subitems.copy()
+                    _subitems.remove(subitem)
+                    for item in _subitems:
+                        if not set(items_dic[item]).issubset(items_dic[subitem]) and not common_elements(items_dic[subitem],items_dic[item]):
+                            association_rules_dict[f"{items_dic[subitem]} -> {items_dic[item]}"] = supports_dic[key]/supports_dic[subitem]
 
     top_10_list = sorted(association_rules_dict.items(), key=lambda item: item[1], reverse=True)
 
@@ -120,13 +139,15 @@ if st.session_state['show_csv_field_']:
     if uploaded_file is not None:
         datas_ = pd.read_csv(uploaded_file, header= None, on_bad_lines='skip', dtype=str, na_filter=False)
         transactions_ = generate_transactions(datas_)
+        max_support = len(datas_)
         st.session_state['dataframe_'] = datas_
         st.session_state['transactions_'] = transactions_
+        st.session_state['max_support_'] = max_support
         csv_loader.button("Valider", on_click= define_support)
 
 if st.session_state['choose_support_'] == True:
     # b) Choisir support
-    support = support_choice_.number_input('Valeur du support:', 2, max_value= 100)
+    support = support_choice_.number_input('Valeur du support:', 2, max_value= max_support)
     st.session_state['support_'] = support
 
     if  support_choice_.button("Lancer"):
