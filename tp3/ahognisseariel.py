@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from collections import defaultdict
-import time
+import csv, io
 
 
 # FONCTIONS
@@ -128,11 +128,25 @@ def generate_association_rules(items_dic, supports_dic):
 
     return top_10_dict
 
+def uniform_dataset(uploaded_file):
+    csv_data = io.StringIO(uploaded_file.getvalue().decode("utf-8"))
+    reader = csv.reader(csv_data)
+    data = list(reader)
+    max_length = max(len(row) for row in data)
+
+    padded_data = []
+    for row in data:
+        padded_row = row + ['' for _ in range(max_length - len(row))]
+        padded_data.append(padded_row)
+    df = pd.DataFrame(padded_data)
+
+    return df
+
 # Déroulement du programme
 if st.session_state['show_csv_field_']:
     uploaded_file = csv_loader.file_uploader("Charger un csv:", type=["csv"])
     if uploaded_file is not None:
-        datas_ = pd.read_csv(uploaded_file, header= None, on_bad_lines='skip', dtype=str, na_filter=False)
+        datas_ = uniform_dataset(uploaded_file)
         transactions_ = generate_transactions(datas_)
         max_support = len(datas_)
         st.session_state['dataframe_'] = datas_
