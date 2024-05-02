@@ -128,6 +128,7 @@ def generate_association_rules(items_dic, supports_dic):
 
     return top_10_dict
 
+# Uniformiser les tailles des colonnes du dataset
 def uniform_dataset(uploaded_file):
     csv_data = io.StringIO(uploaded_file.getvalue().decode("utf-8"))
     reader = csv.reader(csv_data)
