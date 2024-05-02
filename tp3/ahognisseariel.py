@@ -51,13 +51,15 @@ transactions_ = st.session_state['transactions_']
 def define_support():
     st.session_state['show_csv_field_'] = not st.session_state['show_csv_field_']
     st.session_state['choose_support_'] = not st.session_state['choose_support_']
-    
     return 0
+
+def remove_empty_strings(lst):
+    return [item for item in lst if item != '']
 
 def generate_itemset():
     all_products = datas_.values.flatten().tolist()
     itemset = list(set(all_products))
-    return itemset
+    return remove_empty_strings(itemset)
 
 def generate_transactions(dataset):
     transactions = []
@@ -91,7 +93,7 @@ def generate_frequent_items(lst, k):
     supports_dict = {}
     for i, combination in enumerate(all_combinations):
         combination_support = calculate_support(combination)
-        if combination_support >= k and not set(['']).issubset(combination):
+        if combination_support >= k:
             combinations_dict[f"Combinaison_{i+1}"] = combination
             supports_dict[f"Combinaison_{i+1}"] = combination_support
     return combinations_dict, supports_dict
